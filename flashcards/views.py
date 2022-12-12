@@ -13,7 +13,7 @@ from django.core import serializers
 import json
 
 
-
+#makes the homepage of the file. 
 def index(request):
     #print("####################################")
     #print ("         request index ")
@@ -28,7 +28,7 @@ def index(request):
     return render(request, "flashcards/index.html", {"cards": cards, "is_maker": is_maker, "watched":watched
             , "jsonc" : serializers.serialize("json",cards)})
 
-
+#makes the login
 def login_view(request):
     #print("####################################")
     #print ("         request log_in ")
@@ -51,7 +51,7 @@ def login_view(request):
     else:
         return render(request, "flashcards/login.html")
 
-
+#makes the logout request, and makes it log out
 def logout_view(request):
     #print("####################################")
     #print ("         request log_out ")
@@ -59,7 +59,7 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
-
+#helps with the register
 def register(request):
     #print("####################################")
     #print ("         request register")
@@ -91,7 +91,7 @@ def register(request):
     
     
 
-
+#shows all of the code
 def viewcards(request):
     #print("####################################")
     #print ("         request viewcards")
@@ -105,7 +105,7 @@ def viewcards(request):
     
     return render(request, "flashcards/index.html", {"cards": cards, "nocard": nocard })
 
-
+#shows one specific code
 def viewcard(request, cardid):
     #print("####################################")
     #print ("         request viewcard")
@@ -141,7 +141,7 @@ def viewcard(request, cardid):
             ,"watching": watching, "comments": comments, "is_maker": is_maker, "watched":watched})
 
 
-
+#when admin, you can make another card
 @login_required(login_url='/login')
 def newcard(request):
     #print("####################################")
@@ -162,7 +162,8 @@ def newcard(request):
     else: 
         categories=Category.objects.all()
         return render(request,"flashcards/newcard.html", {"categories": categories, "is_maker": is_maker}) 
-    
+  
+#while admin, you can make another category
 @login_required(login_url='/login')
 def newcategory(request):
     #print("####################################")
@@ -181,7 +182,7 @@ def newcategory(request):
         return HttpResponseRedirect(reverse("index"))
     else: 
         return render(request,"flashcards/newcategory.html", {"is_maker": is_maker}) 
-
+#will show everythign in a certain category. 
 def category(request , categoryid):
     #print("####################################")
     #print ("         request category")
@@ -209,7 +210,7 @@ def category(request , categoryid):
                 "categories": categories, "category": cardcategories[0], "cards": cards[0]
                 , "is_maker": is_maker, "watched":watched
                 , "jsonc" : serializers.serialize("json",cards)})
-       
+#a thing that I prob will never use.        
 @login_required(login_url='/login')
 def watchcard(request):
     #print("####################################")
@@ -227,7 +228,7 @@ def watchcard(request):
     
     return render(request, "flashcards/watchcard.html", {"cards": cards , "is_maker": is_maker, "watched":watched})        
 
-
+#never use this as well. 
 @login_required(login_url='/login')
 def addwatchcard(request, cardid):
 
