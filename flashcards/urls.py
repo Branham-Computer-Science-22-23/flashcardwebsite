@@ -1,3 +1,4 @@
+#every parts of a url link 
 from django.urls import path
 
 from . import views
