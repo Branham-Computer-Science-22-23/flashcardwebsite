@@ -213,7 +213,7 @@ def category(request , categoryid):
 @login_required(login_url='/login')
 def watchcard(request):
     #print("####################################")
-    #print ("         request watchcard")
+    #print ("        request watchcard")
     #print("####################################")
     
     watchcardids = Watchcard.objects.filter(user=request.user.username).order_by("-createdate").values_list('cardid',flat=True)
