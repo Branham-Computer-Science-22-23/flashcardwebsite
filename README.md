@@ -1,9 +1,9 @@
 # flashcardwebsite
 
-I made this with Django
+I made this with Django.
 
-The front end was done with Javascript, HTML, and CSS
-The back end was done with Python and connected to the front end by JSON
+The front end was done with Javascript, HTML, and CSS.
+The back end was done with Python and connected to the front end by JSON.
 The DB was created with SQLlite.
 
 I already filled in some of the DB. 
