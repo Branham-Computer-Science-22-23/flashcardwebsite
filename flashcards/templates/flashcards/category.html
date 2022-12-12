@@ -1,0 +1,204 @@
+{% extends "flashcards/layout.html" %}
+
+{% block body %}
+	<div>
+    	{% if totalcategory  %}
+    		<h2 class="card-title h2">Sets</h2>
+    			<div class="card-deck">
+                {% for category in categories %}
+					<div class="card">
+						<div class="card-body">
+                    	<a href="{% url 'category' category.id %}">
+                    	<i class="fas fa-tshirt mr-5"></i> {{category.category}}
+						{% if category.imageurl %}
+    					<img src="{{category.imageurl}}" class="rounded" style = " text-align:center;max-height: 100px; max-width: 100px;">
+    					{% else %}
+    					<img src="https://p7cdn4static.sharpschool.com/UserFiles/Servers/Server_1271683/Image/Meet%20the%20Candidates/No-Photo-Provided.png" class="rounded" style = " text-align:center;max-height: 250px; max-width: 250px;"">
+    					{% 	endif %}
+    					</a>
+						</div>
+    				</div>
+					
+                {% endfor %}
+             </div>
+        {% else %}
+    		<h2 class="card-title h2">Set: {{category}}</h2>
+    		<select class="browser-default custom-select" onchange="location = this.value;">
+    			<option selected>Select Other Set</option>
+    			{% for category in categories %}
+    				<option  value="{% url 'category' category.id %}">{{category.category}}</option>
+  				{% endfor %}
+  			</select>
+	
+			{% if cards  %}
+			 	<div class="flipCard"> 
+  						<div id = "scard" class="scard" onclick="this.classList.toggle('flipped');"> 
+    						<div id="title" class="side front"></div> 
+    						<div id="define" class="side back"></div>
+							
+ 						 </div> 
+				</div>
+				<div>
+					<center> 
+					<div id="image"></div>
+					<button type="button" id ="first" class="btn btn-primary">First</button>
+					<button type="button" id ="prev" class="btn btn-primary">Prev</button>
+					<button type="button" id="next" class="btn btn-primary">Next</button>
+					<button type="button" id="flip" class="btn btn-primary" >Flip</button>
+					<button type="button" id ="random" class="btn btn-primary">Random</button>
+					</center> 
+				</div>
+				<div>
+					<center> 
+					<button type="button" id ="test" class="btn btn-secondary btn-sm">test</button>
+					 <input autofocus class="mx-sm-3 mb-2" type="text" name="word" id="word" placeholder="word" />
+					</center> 
+				</div>
+			{% else %}
+	           <div> No card found </div>
+	        {% endif %}
+    		
+    	 {% endif %}
+    </div>
+   
+    	
+{% endblock %}
+
+{% block javascript %}
+
+<script>
+const cards =  {{ jsonc | safe }};
+const length = cards.length;
+var current = 0;
+
+
+
+function shuffle(a) {
+    var j, x, i;
+    for (i = a.length; i; i -= 1) {
+        j = Math.floor(Math.random() * i);
+        x = a[i - 1];
+        a[i - 1] = a[j];
+        a[j] = x;
+    }
+}
+function setCard(index) {
+	$('#title').html(cards[index].fields.title);
+	$('#define').html(cards[index].fields.meaning);
+	imgurl = cards[index].fields.imageurl;
+	if(imgurl !="") {
+		$('#image').html("<img src="  + imgurl
+		+ " class='rounded'' style = 'text-align:center;max-height: 300px; max-width: 300px;'>");
+	}else {
+		$('#image').html('');
+	}
+	
+}
+
+function movefirst() {
+	current = 0;
+	setCard(current);
+	$('#scard').removeClass("flipped");
+}
+
+function random() {
+	shuffle(cards);
+	movefirst();
+	
+}
+
+
+function moveprev() {
+	current--;
+	if (current < 0) {
+		alert(" This is the first card ");
+		current = 0;
+		
+	}  
+	setCard(current);
+	$('#scard').removeClass("flipped");
+}
+
+function movenext() {
+	current++;
+	if (current >= length) {
+		alert(" The last card \n Moving to the first card ")
+		current = 0;
+	}  
+	setCard(current);
+	
+	$('#scard').removeClass("flipped");
+	
+}
+
+
+
+
+$(document).ready(function () {
+		if(length > 0) {
+			setCard(current);
+			
+		}
+		$("#random").click(function(){
+			random();
+		});
+		$("#first").click(function(){
+			movefirst();
+		});
+		
+		$("#flip").click(function(){
+			$("#scard").toggleClass("flipped");
+		});
+		
+		$("#prev").click(function(){
+			moveprev();
+		});
+		$("#next").click(function(){
+			movenext();
+		});
+		$("#test").click(function(){
+			random();
+			$("#scard").toggleClass("flipped");
+		});
+		
+	   $(document).keydown(function(e){
+			const keyvalue = e.keyCode;
+			switch (keyvalue) {
+  				case 37: // left
+					moveprev();
+				break;
+			  	case 39: // right
+					movenext();
+			  	break;
+				case 38: // up
+				case 40: // down 
+					$("#scard").toggleClass("flipped");
+			    break;
+				case 13: // down 
+					var title = $.trim(cards[current].fields.title);
+					var word = $('#word').val();
+					
+					if (word != "" && title === word) {
+						$('#word').val('');
+						$('#word').focus();
+						movenext();
+						$("#scard").toggleClass("flipped");
+					} else  {
+						alert("Try again!");
+						$('#word').focus();
+					}
+			    break;
+			  	default:
+			    break;
+			}
+			
+			
+	   });
+
+       
+});
+
+
+
+</script>
+{% endblock %}
