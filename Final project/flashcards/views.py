@@ -13,7 +13,7 @@ from django.core import serializers
 import json
 
 
-
+#makes the homepage work. 
 def index(request):
     #print("####################################")
     #print ("         request index ")
@@ -28,7 +28,7 @@ def index(request):
     return render(request, "flashcards/index.html", {"cards": cards, "is_maker": is_maker, "watched":watched
             , "jsonc" : serializers.serialize("json",cards)})
 
-
+#shows the login 
 def login_view(request):
     #print("####################################")
     #print ("         request log_in ")
@@ -51,7 +51,7 @@ def login_view(request):
     else:
         return render(request, "flashcards/login.html")
 
-
+#shows the log out 
 def logout_view(request):
     #print("####################################")
     #print ("         request log_out ")
@@ -59,7 +59,7 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
-
+#shows the register website
 def register(request):
     #print("####################################")
     #print ("         request register")
@@ -91,7 +91,7 @@ def register(request):
     
     
 
-
+#Makes it so that the user can see everything. 
 def viewcards(request):
     #print("####################################")
     #print ("         request viewcards")
@@ -105,7 +105,7 @@ def viewcards(request):
     
     return render(request, "flashcards/index.html", {"cards": cards, "nocard": nocard })
 
-
+#makes it so that a specific card is read. 
 def viewcard(request, cardid):
     #print("####################################")
     #print ("         request viewcard")
@@ -141,7 +141,7 @@ def viewcard(request, cardid):
             ,"watching": watching, "comments": comments, "is_maker": is_maker, "watched":watched})
 
 
-
+#when the admin will be able to make a new card. 
 @login_required(login_url='/login')
 def newcard(request):
     #print("####################################")
@@ -162,7 +162,8 @@ def newcard(request):
     else: 
         categories=Category.objects.all()
         return render(request,"flashcards/newcard.html", {"categories": categories, "is_maker": is_maker}) 
-    
+
+#making a new category. 
 @login_required(login_url='/login')
 def newcategory(request):
     #print("####################################")
@@ -181,6 +182,7 @@ def newcategory(request):
         return HttpResponseRedirect(reverse("index"))
     else: 
         return render(request,"flashcards/newcategory.html", {"is_maker": is_maker}) 
+
 
 def category(request , categoryid):
     #print("####################################")
@@ -209,7 +211,8 @@ def category(request , categoryid):
                 "categories": categories, "category": cardcategories[0], "cards": cards[0]
                 , "is_maker": is_maker, "watched":watched
                 , "jsonc" : serializers.serialize("json",cards)})
-       
+
+#idk lowkey didn't work so scrapped it 
 @login_required(login_url='/login')
 def watchcard(request):
     #print("####################################")
